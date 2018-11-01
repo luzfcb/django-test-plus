@@ -1,5 +1,7 @@
-from django.conf.urls import url
-from django.urls import include
+try:
+    from django.conf.urls import url, include
+except ImportError:
+    from django.conf.urls.defaults import url, include
 from rest_framework.routers import DefaultRouter
 
 from . import views
