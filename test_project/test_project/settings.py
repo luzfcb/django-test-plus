@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from test_plus.compat import DRF
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -27,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,7 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'test_app',
-)
+]
+
+if DRF:
+    INSTALLED_APPS += [
+        'rest_framework',
+    ]
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
