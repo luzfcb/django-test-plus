@@ -11,3 +11,6 @@ dist/
 .eggs/
 .pytest_cache/
 test_project/.pytest_cache/
+*.sqlite3
+*.db
+
