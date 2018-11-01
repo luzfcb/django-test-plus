@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 if DRF:
     INSTALLED_APPS += [
         'rest_framework',
+        'test_api_app',
     ]
 
 MIDDLEWARE = (

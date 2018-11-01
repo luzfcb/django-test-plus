@@ -3,6 +3,8 @@ try:
 except ImportError:
     from django.conf.urls.defaults import url, include
 
+from test_plus.compat import DRF
+
 from .views import (
     FormErrors, data_1, data_5, needs_login, view_200, view_201, view_204,
     view_301, view_302, view_400, view_401, view_403, view_404, view_405,
@@ -38,3 +40,13 @@ urlpatterns = [
     url(r'^cbview/needs-login/$', CBLoginRequiredView.as_view(), name='cbview-needs-login'),
     url(r'^cbview/$', CBView.as_view(), name='cbview'),
 ]
+if DRF:
+    from test_api_app.urls import router2
+    urlpatterns += [
+        url(r"^api/", include(
+            [
+                url(r"^v1/", include("test_api_app.urls")),
+                url(r"^v2/", include(router2.urls, ))
+            ])
+            )
+    ]

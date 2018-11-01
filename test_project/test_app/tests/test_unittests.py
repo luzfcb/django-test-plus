@@ -28,7 +28,6 @@ from test_app.views import (
     CBView,
 )
 
-
 User = get_user_model()
 
 
@@ -73,7 +72,8 @@ class TestPlusViewTests(TestCase):
 
     def test_print_form_errors(self):
 
-        with self.assertRaisesMessage(Exception, 'print_form_errors requires the response_or_form argument to either be a Django http response or a form instance.'):
+        with self.assertRaisesMessage(Exception,
+                                      'print_form_errors requires the response_or_form argument to either be a Django http response or a form instance.'):
             self.print_form_errors('my-bad-argument')
 
         form = NameForm(data={})
@@ -582,6 +582,66 @@ class TestAPITestCaseDRFInstalled(APITestCase):
         data = {'testing': {'prop': 'value'}}
         self.post('view-json', data=data, extra={'format': 'json'})
         self.response_200()
+
+    def test_post_viewset1(self):
+        data = {'name': "data name1"}
+        self.post('api_v1:data-list', data=data, extra={'format': 'json'})
+        self.response_201()
+
+    def test_list_viewset1(self):
+        data = {'name': "data name1"}
+        Data.objects.create(**data)
+        self.get('api_v1:data-list', extra={'format': 'json'})
+        self.response_200()
+
+    def test_retrieve_viewset1(self):
+        try:
+            from django.urls import reverse
+        except ImportError:
+            from django.core.urlresolvers import reverse
+
+        data = {'name': "data name1"}
+        data_object = Data.objects.create(**data)
+        kwargs = {'pk': data_object.pk}
+
+        # this work
+        url = reverse('api_v1:data-detail', kwargs=kwargs)
+        response = self.get(url, kwargs=kwargs, extra={'format': 'json'})
+        self.response_200(response)
+
+        # this not work, return 404
+        response = self.get('api_v1:data-detail', kwargs=kwargs, extra={'format': 'json'})
+        self.response_200(response)
+
+    def test_post_viewset2(self):
+        data = {'name': "data name1"}
+        self.post('data2-list', data=data, extra={'format': 'json'})
+        self.response_201()
+
+    def test_list_viewset2(self):
+        data = {'name': "data name1"}
+        Data.objects.create(**data)
+        self.get('data2-list', extra={'format': 'json'})
+        self.response_200()
+
+    def test_retrieve_viewset2(self):
+        try:
+            from django.urls import reverse
+        except ImportError:
+            from django.core.urlresolvers import reverse
+
+        data = {'name': "data name1"}
+        data_object = Data.objects.create(**data)
+        kwargs = {'pk': data_object.pk}
+
+        # this work
+        url = reverse('data2-detail', kwargs=kwargs)
+        response = self.get(url, kwargs=kwargs, extra={'format': 'json'})
+        self.response_200(response)
+
+        # this not work, return 404
+        response = self.get('data2-detail', kwargs=kwargs, extra={'format': 'json'})
+        self.response_200(response)
 
 
 # pytest tests
